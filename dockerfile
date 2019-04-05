@@ -11,5 +11,7 @@ EXPOSE 80
 
 STOPSIGNAL SIGTERM
 
+RUN chmod +x /usr/local/bin/run
+
 ENTRYPOINT ["/usr/local/bin/run"]
 CMD  nginx -g 'daemon off;'
