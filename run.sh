@@ -6,22 +6,37 @@ APP_TRACE=${APP_TRACE:-true}
 
 PLATFORM_KEY=${PLATFORM_KEY:-DFEQDVSC}
 
+TEMPLATE=${TEMPLATE:-1}
+
+FASTCGI_PASS=${FASTCGI_PASS:-unix:/var/run/php5-fpm.sock}
 WORKER_PROCESSES=${WORKER_PROCESSES:-auto}
 WORKER_CONNECTIONS=${WORKER_CONNECTIONS:-2048}
 KEEPALIVE_TIMEOUT=${KEEPALIVE_TIMEOUT:-65}
 CLIENT_MAX_BODY_SIZE=${CLIENT_MAX_BODY_SIZE:-500k}
 
+
 if [ ! -f /tmp/configured ]
 then
+
+
+
+  if [ ! "${FASTCGI_PASS}" = "unix:/var/run/php5-fpm.sock" ]
+  then
+    echo "Setting 'fastcgi_pass' to '${FASTCGI_PASS}'"
+    sed -i "s#fastcgi_pass unix:/var/run/php5-fpm.sock#fastcgi_pass ${FASTCGI_PASS}#g" /etc/nginx/conf.d/default.conf
+  else
+    echo "Using default value '${FASTCGI_PASS}' for 'fastcgi_pass'"
+  fi
+
 
   if [ ! "${PLATFORM_KEY}" = "DFEQDVSC" ]
   then
     echo "Setting 'platform.key' to '${PLATFORM_KEY}'"
-    sed -i "s#add_header K-PlatForm \"DFEQDVSC\"#add_header K-PlatForm \"${PLATFORM_KEY}\"#g" /etc/nginx/conf.d/default.conf
+    sed -i "s/add_header K-PlatForm \"DFEQDVSC\"/add_header K-PlatForm \"${PLATFORM_KEY}\"/g" /etc/nginx/conf.d/default.conf
   else
     echo "Using default value '${PLATFORM_KEY}' for 'platform.key'"
   fi
- 
+
   if [ ! "${WORKER_PROCESSES}" = "auto" ]
   then
     echo "Setting 'worker_processes' to '${WORKER_PROCESSES}'"
@@ -53,6 +68,7 @@ then
   else
     echo "Using default value '${CLIENT_MAX_BODY_SIZE}' for 'client_max_body_size'"
   fi
+
 
   touch /tmp/configured
   echo "Configuration complete."
