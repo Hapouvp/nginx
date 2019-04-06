@@ -1,12 +1,24 @@
 #!/bin/bash
 
-ADMIN_URL=${ADMIN_URL:-ahoho}
-APP_DEBUG=${APP_DEBUG:-true}
-APP_TRACE=${APP_TRACE:-true}
+ADMIN_CODE=${ADMIN_CODE:-oocc}
 
+PORTAL_KEY=${PORTAL_KEY:-lotteryportalkey}
+
+PLATFORM_HOST=${PLATFORM_HOST:-http://172.17.0.1:8081/remote/}
 PLATFORM_KEY=${PLATFORM_KEY:-DFEQDVSC}
 
-TEMPLATE=${TEMPLATE:-1}
+GAMEPROXY_HOST=${GAMEPROXY_HOST:-http://172.17.0.1:8081/thirdgame/}
+GAMEPROXY_KEY=${GAMEPROXY_KEY:-gmvpBYS5QiYt3EYVy7y8odkhURYFHiHH}
+GAMEPROXY_DESKEY=${GAMEPROXY_DESKEY:-a5bPUWJo}
+
+ENABLE_AG=${ENABLE_AG:-true}
+ENABLE_365=${ENABLE_365:-true}
+ENABLE_KAIYUAN=${ENABLE_KAIYUAN:-true}
+ENABLE_TZ=${ENABLE_TZ:-true}
+
+
+AUTH_KEY=${AUTH_KEY:-bodE2IzW15Eo9vMW9P7hU1N}
+AUTH_APPKEY=${AUTH_APPKEY:-sdfasf5Pi8ffskdn##223fsvKJHKJ}
 
 FASTCGI_PASS=${FASTCGI_PASS:-unix:/var/run/php5-fpm.sock}
 WORKER_PROCESSES=${WORKER_PROCESSES:-auto}
@@ -15,10 +27,9 @@ KEEPALIVE_TIMEOUT=${KEEPALIVE_TIMEOUT:-65}
 CLIENT_MAX_BODY_SIZE=${CLIENT_MAX_BODY_SIZE:-500k}
 
 
+###################  change config ########################
 if [ ! -f /tmp/configured ]
 then
-
-
 
   if [ ! "${FASTCGI_PASS}" = "unix:/var/run/php5-fpm.sock" ]
   then
@@ -27,7 +38,7 @@ then
   else
     echo "Using default value '${FASTCGI_PASS}' for 'fastcgi_pass'"
   fi
-
+  
 
   if [ ! "${PLATFORM_KEY}" = "DFEQDVSC" ]
   then
@@ -69,9 +80,9 @@ then
     echo "Using default value '${CLIENT_MAX_BODY_SIZE}' for 'client_max_body_size'"
   fi
 
-
   touch /tmp/configured
   echo "Configuration complete."
 fi
 
-exec "$@"
+nginx -g 'daemon off;'
+
